@@ -9,7 +9,7 @@ class MrpProduction(models.Model):
     _inherit = "mrp.production"
 
     @api.multi
-    def _prepare_service_procurement_values(self):
+    def _prepare_service_procurement_values(self, bom_line):
         self.ensure_one()
         location = self.location_src_id
         return {
@@ -17,11 +17,13 @@ class MrpProduction(models.Model):
             'date_planned': self.date_planned_start,
             'warehouse_id': location.get_warehouse(),
             'group_id': self.procurement_group_id,
+            'production_id': self,
+            'bom_line_id': bom_line,
         }
 
     @api.model
     def _action_launch_procurement_rule(self, bom_line, dict):
-        values = self._prepare_service_procurement_values()
+        values = self._prepare_service_procurement_values(bom_line)
 
         name = '%s for %s' % (bom_line.product_id.name,
                               self.name)
