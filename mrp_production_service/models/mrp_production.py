@@ -24,9 +24,7 @@ class MrpProduction(models.Model):
     @api.model
     def _action_launch_procurement_rule(self, bom_line, dict):
         values = self._prepare_service_procurement_values(bom_line)
-
-        name = '%s for %s' % (bom_line.product_id.name,
-                              self.name)
+        name = self.name
         self.env['procurement.group'].sudo().run(
             bom_line.product_id, dict['qty'],
             bom_line.product_uom_id,
